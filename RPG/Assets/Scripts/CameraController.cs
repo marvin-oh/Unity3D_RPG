@@ -7,9 +7,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float     minDistance = 3;    // 카메라와 target의 최소 거리
     [SerializeField]
-    private float     maxDistance = 10;   // 카메라와 target의 최대 거리
+    private float     maxDistance = 8;   // 카메라와 target의 최대 거리
     [SerializeField]
-    private float     wheelSpeed = 500;   // 마우스 휠 스크롤 속도
+    private float     wheelSpeed = 2000;  // 마우스 휠 스크롤 속도
     [SerializeField]
     private float     xMoveSpeed = 500;   // 카메라의 y축 회전 속도
     [SerializeField]

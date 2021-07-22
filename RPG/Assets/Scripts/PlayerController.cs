@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,6 +10,9 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.visible   = false;                     // 마우스 커서를 보이지 않게
+        Cursor.lockState = CursorLockMode.Locked;     // 마우스 커서 위치 고정
+
         player = GetComponent<Player>();
         cameraTransform = Camera.main.transform;
     }
@@ -31,6 +32,12 @@ public class PlayerController : MonoBehaviour
         if ( Input.GetKeyDown(jumpKeyCode) )
         {
             player.JumpTo();
+        }
+
+        // 마우스 좌클릭시 무기 공격
+        if ( Input.GetMouseButtonDown(0) )
+        {
+            player.Attack();
         }
     }
 }

@@ -35,10 +35,10 @@ public class MonsterSpawner : MonoBehaviour
 
     private IEnumerator Delivery(Character target)
     {
+        // 랜덤 위치 지정
         Vector3 randPos = Random.insideUnitSphere.normalized;
         randPos.y = 0;
         Vector3 goalPos = transform.position + randPos;
-        print("goalPos:" + goalPos);
 
         Vector3 direction = (goalPos - transform.position).normalized;
         target.MoveTo(direction);

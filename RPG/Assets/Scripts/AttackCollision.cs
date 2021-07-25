@@ -20,7 +20,7 @@ public class AttackCollision : MonoBehaviour
 
     private IEnumerator AutoDisable()
     {
-        // 0.1초 후에 오브젝트가 사라지도록 한다.
+        // 0.1초 후에 오브젝트 비활성화
         yield return new WaitForSeconds(0.1f);
 
         gameObject.SetActive(false);

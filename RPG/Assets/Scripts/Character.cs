@@ -9,9 +9,11 @@ public class Character : MonoBehaviour
 
     [Header("Info")]
     [SerializeField]
-    private int          level;           // 레벨
+    private int          level = 1;       // 레벨
     [SerializeField]
-    protected float      hp;              // 체력
+    private int          maxLevel = 99;   // 최대 레벨
+    [SerializeField]
+    protected float      hp = 100;        // 체력
 
     [Header("Attack")]
     protected Weapon     weapon;          // 무기
@@ -30,7 +32,7 @@ public class Character : MonoBehaviour
     {
         set
         {
-            level = Mathf.Max(1, value);
+            level = Mathf.Clamp(value, 0, maxLevel);
             levelText.text = "Lv." + level.ToString();
         }
         get
@@ -43,7 +45,7 @@ public class Character : MonoBehaviour
     {
         set
         {
-            hp = Mathf.Max(0, value);
+            hp = Mathf.Clamp(value, 0, MaxHp);
             hpSlider.value = Hp / MaxHp;
         }
         get
@@ -90,9 +92,9 @@ public class Character : MonoBehaviour
         levelText = levelTextClone.GetComponent<TextMeshProUGUI>();
 
         // 캐릭터 정보 설정
-        level = 1;
-        Hp    = 100.0f;
-        MaxHp = Hp;
+        MaxHp = hp;
+        Hp    = hp;
+        Level = level;
 
         // 무기 설정
         Weapon = new Hand();
@@ -127,10 +129,22 @@ public class Character : MonoBehaviour
 
         Hp -= damage;
 
-        if ( Hp == 0 )
-        {
-            Die();
-        }
+        if ( Hp == 0 ) { Die(); }
+
+        // 색상 변경
+        StartCoroutine("OnHitColor");
+    }
+
+    private IEnumerator OnHitColor()
+    {
+        // 색을 빨간 색으로 변경한 후 0.1초 후에 원래 색상으로 변경
+        Color originColor = gameObject.GetComponent<MeshRenderer>().material.color;
+
+        gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+
+        yield return new WaitForSeconds(0.1f);
+
+        gameObject.GetComponent<MeshRenderer>().material.color = originColor;
     }
 
     protected virtual void Die()

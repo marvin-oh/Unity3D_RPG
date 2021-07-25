@@ -9,6 +9,6 @@ public class Hand : Weapon
         WeaponType  = WeaponType.None;
         Damage      = 10.0f;
         AttackRange = 1.0f;
-        AttackSpeed = 10.0f;
+        AttackSpeed = 3.0f;
     }
 }

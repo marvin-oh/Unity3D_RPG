@@ -9,16 +9,12 @@ public class Player : Character
     private GameObject expSliderPrefab;  // 경험치 Slider UI 프리팹
     private Slider     expSlider;        // 경험치 Slider UI
 
-    private float  currentExp;  // 현재 경험치
-    private float  maxExp;      // 최대 경험치
+    private float  currentExp = 0;  // 현재 경험치
+    private float  maxExp = 300;    // 최대 경험치
 
     protected override void Awake()
     {
         base.Awake();
-
-        // 초기 경험치 설정
-        currentExp = 0;
-        maxExp = 300;
 
         // UI 세팅
         GameObject expSliderClone = Instantiate(expSliderPrefab);
@@ -43,6 +39,8 @@ public class Player : Character
     protected override void Die()
     {
         base.Die();
+
+        Destroy(gameObject.GetComponent<PlayerController>());
     }
 
     public void IncreaseExp(float exp)
@@ -50,10 +48,7 @@ public class Player : Character
         currentExp += exp;
 
         // 최대 경험치에 도달시 레벨업
-        if ( currentExp >= maxExp )
-        {
-            LevelUp();
-        }
+        if ( currentExp >= maxExp ) { LevelUp(); }
 
         // UI 갱신
         expSlider.value = currentExp / maxExp;
@@ -64,7 +59,7 @@ public class Player : Character
     private void LevelUp()
     {
         Level++;
-
-        currentExp -= maxExp;
+        Hp = MaxHp;
+        currentExp = 0;
     }
 }

@@ -9,6 +9,6 @@ public class Sword : Weapon
         WeaponType  = WeaponType.Sword;
         Damage      = 50.0f;
         AttackRange = 3.0f;
-        AttackSpeed = 5.0f;
+        AttackSpeed = 2.0f;
     }
 }

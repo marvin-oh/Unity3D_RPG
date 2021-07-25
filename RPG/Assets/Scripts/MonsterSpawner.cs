@@ -10,7 +10,7 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField]
     private float       spawnTime = 5.0f;
     [SerializeField]
-    private float       deliveryTime = 1.0f;
+    private float       deliveryTime = 2.0f;
     
     private void Awake()
     {
@@ -37,14 +37,20 @@ public class MonsterSpawner : MonoBehaviour
     {
         // 랜덤 위치 지정
         Vector3 randPos = Random.insideUnitSphere.normalized;
-        randPos.y = 0;
-        Vector3 goalPos = transform.position + randPos;
+        randPos.y = target.transform.position.y;
+        Vector3 goalPos = target.transform.position + randPos;
+        goalPos.y = target.transform.position.y;
 
-        Vector3 direction = (goalPos - transform.position).normalized;
+        // 해당 위치 방향으로 deliveryTime동안 이동
+        Vector3 direction = (goalPos - target.transform.position).normalized;
         target.MoveTo(direction);
+        target.transform.LookAt(goalPos);
 
         yield return new WaitForSeconds(deliveryTime);
 
         target.MoveTo(Vector3.zero);
+
+        // MonsterState 변경
+        target.GetComponent<Monster>().ChangeState(MonsterState.SearchTarget);
     }
 }

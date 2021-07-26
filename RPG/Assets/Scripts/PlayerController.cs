@@ -39,5 +39,9 @@ public class PlayerController : MonoBehaviour
         {
             player.Attack();
         }
+        if ( Input.GetKeyDown(KeyCode.R) )
+        {
+            player.Attack();
+        }
     }
 }

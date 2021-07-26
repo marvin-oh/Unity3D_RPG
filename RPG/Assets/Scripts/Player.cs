@@ -29,6 +29,9 @@ public class Player : Character
     public override void Attack()
     {
         base.Attack();
+
+        // Attack 애니메이션
+        GetComponent<Animator>().SetTrigger("Attack");
     }
 
     public override void TakeDamage(float damage, Transform attacker)
@@ -52,8 +55,6 @@ public class Player : Character
 
         // UI 갱신
         expSlider.value = currentExp / maxExp;
-
-        Debug.Log("EXP: " + currentExp);
     }
 
     private void LevelUp()

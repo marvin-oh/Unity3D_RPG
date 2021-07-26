@@ -52,5 +52,6 @@ public class MonsterSpawner : MonoBehaviour
 
         // MonsterState º¯°æ
         target.GetComponent<Monster>().ChangeState(MonsterState.SearchTarget);
+        target.GetComponent<Monster>().StartCoroutine("Idle");
     }
 }

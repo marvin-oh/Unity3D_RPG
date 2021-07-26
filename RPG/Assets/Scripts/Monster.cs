@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public enum MonsterState { Idle=0, SearchTarget, Chase, TryAttack, }
+public enum MonsterState { SearchTarget=0, Chase, TryAttack, }
 
 public class Monster : Character
 {
@@ -23,6 +23,9 @@ public class Monster : Character
     public override void Attack()
     {
         base.Attack();
+
+        // Attack 애니메이션
+        GetComponent<Animator>().SetTrigger("Attack");
     }
 
     public override void TakeDamage(float damage, Transform attacker)
@@ -38,6 +41,11 @@ public class Monster : Character
 
     protected override void Die()
     {
+        StopCoroutine(monsterState.ToString());
+        StopCoroutine("Idle");
+        attackTarget = null;
+        MoveTo(Vector3.zero);
+
         base.Die();
     }
 
@@ -61,6 +69,29 @@ public class Monster : Character
         StartCoroutine(monsterState.ToString());
     }
 
+    private IEnumerator Idle()
+    {
+        while ( true )
+        {
+            if ( monsterState == MonsterState.SearchTarget )
+            {
+                Vector3 randPos = Random.insideUnitSphere;
+                randPos.y = transform.position.y;
+                Vector3 direction = (randPos - transform.position).normalized;
+                MoveTo(direction);
+                transform.LookAt(randPos);
+
+                yield return new WaitForSeconds(1.0f);
+
+                MoveTo(Vector3.zero);
+
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            yield return null;
+        }
+    }
+
     private IEnumerator SearchTarget()
     {
         while ( true )
@@ -72,14 +103,8 @@ public class Monster : Character
             {
                 // Player와의 거리가 가까우면 공격, 거리가 멀다면 추적
                 float distance = Vector3.Distance(attackTarget.transform.position, transform.position);
-                if ( distance <= Weapon.AttackRange*2 )
-                {
-                    ChangeState(MonsterState.TryAttack);
-                }
-                else
-                {
-                    ChangeState(MonsterState.Chase);
-                }
+                if ( distance <= Weapon.AttackRange*2 ){ ChangeState(MonsterState.TryAttack); }
+                else { ChangeState(MonsterState.Chase); }
             }
             
             yield return null;
@@ -88,11 +113,11 @@ public class Monster : Character
 
     private IEnumerator Chase()
     {
-        while ( true )
+        while ( attackTarget != null )
         {
             // 거리가 너무 멀어지거나, 충분히 가까이 접근했을 경우 중지
             float distance = Vector3.Distance(attackTarget.transform.position, transform.position);
-            if ( (distance > detectRange) || (distance <= Weapon.AttackRange*1.1) ) { break; }
+            if ( (distance > detectRange) || (distance <= Weapon.AttackRange*1.5) ) { break; }
 
             // Target 방향으로 이동
             Vector3 direction = (attackTarget.transform.position - transform.position).normalized;

@@ -102,6 +102,12 @@ public class Character : MonoBehaviour
 
     public void MoveTo(Vector3 direction)
     {
+        if ( Hp == 0 )
+        {
+            movement3D.MoveTo(Vector3.zero);
+            return;
+        }
+
         movement3D.MoveTo(direction);
     }
 
@@ -138,13 +144,19 @@ public class Character : MonoBehaviour
     private IEnumerator OnHitColor()
     {
         // 색을 빨간 색으로 변경한 후 0.1초 후에 원래 색상으로 변경
-        Color originColor = gameObject.GetComponent<MeshRenderer>().material.color;
+        Color originColor = gameObject.GetComponentInChildren<MeshRenderer>().material.color;
 
-        gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        foreach ( MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>() )
+        {
+            renderer.material.color = Color.red;
+        }
 
         yield return new WaitForSeconds(0.1f);
 
-        gameObject.GetComponent<MeshRenderer>().material.color = originColor;
+        foreach ( MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>() )
+        {
+            renderer.material.color = originColor;
+        }
     }
 
     protected virtual void Die()
@@ -158,6 +170,12 @@ public class Character : MonoBehaviour
 
     private IEnumerator Death()
     {
+        // 충돌 해제
+        foreach ( Collider collider in GetComponentsInChildren<Collider>() ) { collider.enabled = false; }
+
+        // 이동 중지
+        GetComponent<Movement3D>().enabled = false;
+
         yield return new WaitForSeconds(1.0f);
 
         Destroy(gameObject);

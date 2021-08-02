@@ -54,18 +54,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\Weapon.cs" />
-    <Compile Include="Assets\Scripts\Character.cs" />
+    <Compile Include="Assets\Scripts\Character\Player.cs" />
+    <Compile Include="Assets\Scripts\Weapon\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Character\Character.cs" />
+    <Compile Include="Assets\Scripts\Weapon\Sword.cs" />
+    <Compile Include="Assets\Scripts\Weapon\Hand.cs" />
+    <Compile Include="Assets\Scripts\UI\SliderAutoPosition.cs" />
     <Compile Include="Assets\Scripts\Movement3D.cs" />
-    <Compile Include="Assets\Scripts\Monster.cs" />
-    <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Character\Monster.cs" />
+    <Compile Include="Assets\Scripts\UI\CameraController.cs" />
+    <Compile Include="Assets\Scripts\AttackCollision.cs" />
     <Compile Include="Assets\Scripts\MonsterSpawner.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Sword.cs" />
-    <Compile Include="Assets\Scripts\Hand.cs" />
-    <Compile Include="Assets\Scripts\AttackCollision.cs" />
-    <Compile Include="Assets\Scripts\SliderAutoPosition.cs" />
+    <Compile Include="Assets\Scripts\UI\Inventory.cs" />
+    <Compile Include="Assets\Scripts\UI\Slot.cs" />
+    <Compile Include="Assets\Scripts\UI\Item.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -83,6 +86,7 @@
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\Resources\inventory.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />

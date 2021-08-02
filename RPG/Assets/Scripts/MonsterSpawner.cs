@@ -3,14 +3,10 @@ using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject  MonsterPrefab;
-    [SerializeField]
-    private int         spawnCount = 5;
-    [SerializeField]
-    private float       spawnTime = 5.0f;
-    [SerializeField]
-    private float       deliveryTime = 2.0f;
+    [SerializeField] private GameObject  MonsterPrefab;
+    [SerializeField] private int         spawnCount = 5;
+    [SerializeField] private float       spawnTime = 5.0f;
+    [SerializeField] private float       deliveryTime = 2.0f;
     
     private void Awake()
     {

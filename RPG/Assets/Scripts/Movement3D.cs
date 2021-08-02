@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class Movement3D : MonoBehaviour
 {
-    [SerializeField]
-    private float   moveSpeed = 5.0f;   // 이동 속도
-    [SerializeField]
-    private float   gravity = -9.8f;    // 중력 계수
-    [SerializeField]
-    private float   jumpForce = 2.0f;   // 점프 힘
+    [SerializeField] private float   moveSpeed = 5.0f;   // 이동 속도
+    [SerializeField] private float   gravity = -9.8f;    // 중력 계수
+    [SerializeField] private float   jumpForce = 2.0f;   // 점프 힘
+
     private Vector3 moveDirection;      // 이동 방향
 
     private CharacterController characterController;

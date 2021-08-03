@@ -70,21 +70,15 @@ public class Character : MonoBehaviour
 
     protected virtual void Awake()
     {
-        movement3D = GetComponent<Movement3D>();
+        movement3D    = GetComponent<Movement3D>();
+        Canvas canvas = GetComponentInChildren<Canvas>();
 
         // UI 세팅 - 체력 Slider UI
-        //Canvas canvas = FindObjectOfType<Canvas>();
-        Canvas     canvas        = GetComponentInChildren<Canvas>();
         GameObject hpSliderClone = Instantiate(hpSliderPrefab, canvas.transform);
-        hpSliderClone.transform.localScale = Vector3.one;
-        hpSliderClone.GetComponent<SliderAutoPosition>().Setup(gameObject.transform);
         hpSlider = hpSliderClone.GetComponent<Slider>();
 
         // UI 세팅 - 레벨 Text UI
-        GameObject levelTextClone = Instantiate(levelTextPrefab);
-        levelTextClone.transform.SetParent(canvas.transform);
-        levelTextClone.transform.localScale = Vector3.one;
-        levelTextClone.GetComponent<SliderAutoPosition>().Setup(gameObject.transform);
+        GameObject levelTextClone = Instantiate(levelTextPrefab, canvas.transform);
         levelText = levelTextClone.GetComponent<TextMeshProUGUI>();
 
         // 캐릭터 정보 설정

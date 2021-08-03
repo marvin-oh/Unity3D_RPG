@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Attackable
   - MainCanvas
+  - Inventory
+  - Status
   layers:
   - Default
   - TransparentFX

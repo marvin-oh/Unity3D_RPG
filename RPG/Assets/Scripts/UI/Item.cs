@@ -1,28 +1,29 @@
 using System.Collections.Generic;
 
+public enum ItemType { weapon=0, consumable, material }
+
 [System.Serializable]
 public class Item
 {
-    public string name;
-    public int    count;
-    public string desc;
-    public int    itemNum;
 
-    public Item(string _name, int _count, string _desc, int _itemNum)
+    public string name;     // 이름
+    public int    count;    // 개수
+    public string desc;     // 설명
+    public int    id;  // 아이템 식별번호
+    public int    type;     // 타입
+
+    public Item(string _name, int _count, string _desc, int _id, int _type)
     {
         name    = _name;
         count   = _count;
         desc    = _desc;
-        itemNum = _itemNum;
+        id      = _id;
+        type    = _type;
     }
 
-    public Item(Item target) : this(target.name, target.count, target.desc, target.itemNum) { }
-}
+    public Item(Item target) 
+        : this(target.name, target.count, target.desc, target.id, target.type) { }
 
-[System.Serializable]
-public class Serialization<T>
-{
-    public List<T> target;
-
-    public Serialization(List<T> _target) => target = _target;
+    public Item(string _name, int _count, string _desc, int _id, ItemType _type) 
+        : this(_name, _count, _desc, _id, (int)_type) { }
 }

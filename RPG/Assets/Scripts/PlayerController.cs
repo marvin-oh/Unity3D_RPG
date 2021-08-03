@@ -3,30 +3,26 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private Player    player;
-    private Transform cameraTransform;
-
-    [SerializeField] private KeyCode    jumpKeyCode = KeyCode.Space;
-
-    [Header("UI")]
-    [SerializeField] private GameObject inventoryPanelPrefab;
+    private Player     player;
+    private Transform  cameraTransform;
+    private GameObject statusPanel;
     private GameObject inventoryPanel;
+
+    [SerializeField] private KeyCode jumpKeyCode = KeyCode.Space;
+
 
     private void Awake()
     {
-        Cursor.visible   = false;                     // 마우스 커서를 보이지 않게
-        Cursor.lockState = CursorLockMode.Locked;     // 마우스 커서 위치 고정
-
         player          = GetComponent<Player>();
         cameraTransform = Camera.main.transform;
-        inventoryPanel  = Instantiate(inventoryPanelPrefab, GameObject.FindGameObjectWithTag("MainCanvas").transform);
+        statusPanel     = GameObject.FindGameObjectWithTag("Status");
+        inventoryPanel  = GameObject.FindGameObjectWithTag("Inventory");
+
+        statusPanel.SetActive(false);
         inventoryPanel.SetActive(false);
     }
 
-    private void Update()
-    {
-        KeyboardControl();
-    }
+    private void Update() => KeyboardControl();
 
     private void KeyboardControl()
     {
@@ -42,21 +38,33 @@ public class PlayerController : MonoBehaviour
         // Space키를 누르면 점프
         if ( Input.GetKeyDown(jumpKeyCode) ) { player.JumpTo(); }
 
-        // 인벤토리 창 팝업
-        if ( Input.GetKeyDown(KeyCode.I) ) { ToggleInventory(); }
+        // UI 창 팝업
+        if ( Input.GetKeyDown(KeyCode.I) )      { ToggleUI(inventoryPanel); }
+        if ( Input.GetKeyDown(KeyCode.E) )      { ToggleUI(statusPanel); }
+        if ( Input.GetKeyDown(KeyCode.Escape) ) { QuitAllUI(); }
 
-        // 인벤토리 창 팝업 중에는 동작 x
-        if ( inventoryPanel.activeInHierarchy ) { return; }
+        // UI Mode 수행중 동작 x
+        if ( inventoryPanel.activeInHierarchy || statusPanel.activeInHierarchy ) { return; }
 
         // 마우스 좌클릭시 무기 공격
         if ( Input.GetMouseButtonDown(0) ) { player.Attack(); }
         if ( Input.GetKeyDown(KeyCode.R) ) { player.Attack(); }
     }
 
-    private void ToggleInventory()
+    private void ToggleUI(GameObject ui)
     {
-        inventoryPanel.SetActive(!inventoryPanel.activeInHierarchy);
+        ui.SetActive(!ui.activeInHierarchy);
 
-        Camera.main.GetComponent<CameraController>().Setup(inventoryPanel.activeInHierarchy ? null : player.gameObject);
+        bool uiMode = inventoryPanel.activeInHierarchy | statusPanel.activeInHierarchy;
+
+        Camera.main.GetComponent<CameraController>().UIMode(uiMode);
+    }
+
+    private void QuitAllUI()
+    {
+        statusPanel.SetActive(false);
+        inventoryPanel.SetActive(false);
+
+        Camera.main.GetComponent<CameraController>().UIMode(false);
     }
 }

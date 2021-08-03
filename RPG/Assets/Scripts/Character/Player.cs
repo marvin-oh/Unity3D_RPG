@@ -17,11 +17,8 @@ public class Player : Character
         base.Awake();
 
         // UI ¼¼ÆÃ
-        GameObject expSliderClone = Instantiate(expSliderPrefab);
-        Canvas canvas = FindObjectOfType<Canvas>();
-        expSliderClone.transform.SetParent(canvas.transform);
-        expSliderClone.transform.localScale = Vector3.one;
-        expSliderClone.GetComponent<SliderAutoPosition>().Setup(gameObject.transform);
+        Canvas canvas = GetComponentInChildren<Canvas>();
+        GameObject expSliderClone = Instantiate(expSliderPrefab, canvas.transform);
         expSlider = expSliderClone.GetComponent<Slider>();
         expSlider.value = currentExp / maxExp;
     }

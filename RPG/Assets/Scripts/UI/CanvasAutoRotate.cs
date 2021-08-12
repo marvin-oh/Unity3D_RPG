@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class CanvasAutoRotate : MonoBehaviour
 {
-    private void Update() => transform.rotation = GameObject.FindObjectOfType<Player>().transform.rotation;
+    private void Update()
+    {
+        Player player = FindObjectOfType<Player>();
+        if ( player != null )
+        {
+            transform.rotation = player.transform.rotation;
+        }
+    }
 }

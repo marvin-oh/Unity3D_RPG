@@ -6,18 +6,13 @@ public enum MonsterState { SearchTarget=0, Chase, TryAttack, }
 public class Monster : Character
 {
     [Header("EXP")]
-    [SerializeField] private float        dropExp = 50.0f;      // 드랍 경험치
+    [SerializeField] private float dropExp = 50.0f;      // 드랍 경험치
 
     [Header("Attack")]
-    [SerializeField] private float        detectRange = 10.0f;
+    [SerializeField] private float detectRange = 10.0f;
 
     private GameObject   attackTarget = null;  // 공격 대상
     private MonsterState monsterState;         // Monster FSM
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
 
     public override void Attack()
     {

@@ -5,12 +5,13 @@ using TMPro;
 
 public class Character : MonoBehaviour
 {
-    private Movement3D movement3D;
+    private Movement movement3D;
 
     [Header("Info")]
-    [SerializeField] private   int   level = 1;       // 레벨
+    [SerializeField] private   int   level    = 1;    // 레벨
     [SerializeField] private   int   maxLevel = 99;   // 최대 레벨
-    [SerializeField] protected float hp = 100;        // 체력
+    [SerializeField] protected float hp;              // 현재 체력
+    [SerializeField] protected float maxHp = 100;     // 최대 체력
 
     [Header("Attack")]
     protected Weapon         weapon;    // 무기
@@ -50,7 +51,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    public float MaxHp { protected set; get; }
+    public float MaxHp { protected set => maxHp = value; get => maxHp; }
 
     public Weapon Weapon
     {
@@ -68,9 +69,9 @@ public class Character : MonoBehaviour
         }
     }
 
-    protected virtual void Awake()
+    protected virtual void OnEnable()
     {
-        movement3D    = GetComponent<Movement3D>();
+        movement3D    = GetComponent<Movement>();
         Canvas canvas = GetComponentInChildren<Canvas>();
 
         // UI 세팅 - 체력 Slider UI
@@ -82,8 +83,7 @@ public class Character : MonoBehaviour
         levelText = levelTextClone.GetComponent<TextMeshProUGUI>();
 
         // 캐릭터 정보 설정
-        MaxHp = hp;
-        Hp    = hp;
+        Hp    = MaxHp;
         Level = level;
 
         // 무기 설정
@@ -126,48 +126,12 @@ public class Character : MonoBehaviour
         Hp -= damage;
 
         if ( Hp == 0 ) { Die(); }
-
-        // 색상 변경
-        StartCoroutine("OnHitColor");
-    }
-
-    private IEnumerator OnHitColor()
-    {
-        // 색을 빨간 색으로 변경한 후 0.1초 후에 원래 색상으로 변경
-        Color originColor = gameObject.GetComponentInChildren<MeshRenderer>().material.color;
-
-        foreach ( MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>() )
-        {
-            renderer.material.color = Color.red;
-        }
-
-        yield return new WaitForSeconds(0.1f);
-
-        foreach ( MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>() )
-        {
-            renderer.material.color = originColor;
-        }
     }
 
     protected virtual void Die()
     {
         Debug.Log(gameObject.name + "사망");
 
-        gameObject.tag = "Untagged";
-
-        StartCoroutine("Death");
-    }
-
-    private IEnumerator Death()
-    {
-        // 충돌 해제
-        foreach ( Collider collider in GetComponentsInChildren<Collider>() ) { collider.enabled = false; }
-
-        // 이동 중지
-        GetComponent<Movement3D>().enabled = false;
-
-        yield return new WaitForSeconds(1.0f);
-
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

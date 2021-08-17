@@ -14,33 +14,18 @@ public class Monster : Character
     private GameObject   attackTarget = null;  // 공격 대상
     private MonsterState monsterState;         // Monster FSM
 
-    public override void Attack()
-    {
-        base.Attack();
-
-        // Attack 애니메이션
-        GetComponent<Animator>().SetTrigger("Attack");
-    }
-
     public override void TakeDamage(float damage, Transform attacker)
     {
         base.TakeDamage(damage, attacker);
 
         if ( Hp == 0 )
         {
-            attacker.GetComponent<Player>().IncreaseExp(dropExp);
-            Die();
+            attacker.GetComponent<Player>()?.IncreaseExp(dropExp);
+
+            StopAllCoroutines();
+            MoveTo(Vector3.zero);
+            attackTarget = null;
         }
-    }
-
-    protected override void Die()
-    {
-        StopCoroutine(monsterState.ToString());
-        StopCoroutine("Idle");
-        attackTarget = null;
-        MoveTo(Vector3.zero);
-
-        base.Die();
     }
 
     private void Update()

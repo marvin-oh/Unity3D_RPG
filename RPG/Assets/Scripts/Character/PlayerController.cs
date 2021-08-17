@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
         // 마우스 좌클릭시 무기 공격
         if ( Input.GetMouseButtonDown(0) ) { player.Attack(); }
         if ( Input.GetKeyDown(KeyCode.R) ) { player.Attack(); }
+        if ( Input.GetKeyDown(KeyCode.Alpha1) ) { player.ChangeWeapon("Hand"); }
+        if ( Input.GetKeyDown(KeyCode.Alpha2) ) { player.ChangeWeapon("Sword"); }
     }
 
     private void ToggleUI(GameObject ui)

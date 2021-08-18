@@ -1,9 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[]     playerList;
+    [SerializeField] private List<GameObject> playerList;
     [SerializeField] private int              spawnCount = 1;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Transform        spawnArea;
@@ -21,16 +22,10 @@ public class PlayerSpawner : MonoBehaviour
             if ( FindObjectsOfType<Player>().Length < spawnCount )
             {
                 // playerList에서 비활성화된 player중 하나 활성화
-                foreach ( GameObject player in playerList )
-                {
-                    if ( !player.activeSelf )
-                    {
-                        player.transform.position = spawnArea.position;
-                        player.SetActive(true);
-                        cameraController.Setup(player);
-                        break;
-                    }
-                }
+                GameObject player = playerList.Find(x => !x.activeSelf);
+                player.transform.position = spawnArea.position;
+                player.SetActive(true);
+                cameraController.Setup(player);
             }
 
             yield return null;

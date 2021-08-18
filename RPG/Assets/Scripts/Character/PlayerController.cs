@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
         if ( Input.GetKeyDown(KeyCode.R) ) { player.Attack(); }
         if ( Input.GetKeyDown(KeyCode.Alpha1) ) { player.ChangeWeapon("Hand"); }
         if ( Input.GetKeyDown(KeyCode.Alpha2) ) { player.ChangeWeapon("Sword"); }
+        if ( Input.GetKeyDown(KeyCode.Alpha3) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Hand")); }
+        if ( Input.GetKeyDown(KeyCode.Alpha4) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Sword")); }
     }
 
     private void ToggleUI(GameObject ui)

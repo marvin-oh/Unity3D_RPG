@@ -1,16 +1,23 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[] monsterList;
-    [SerializeField] private int          spawnCount = 5;
-    [SerializeField] private float        spawnTime = 5.0f;
-    [SerializeField] private float        deliveryTime = 2.0f;
-    [SerializeField] private Transform    spawnArea;
+    public static MonsterSpawner Instance { private set; get; }
+
+    [SerializeField] private List<GameObject> monsterList;
+    [SerializeField] private int              spawnCount   = 5;
+    [SerializeField] private float            spawnTime    = 5.0f;
+    [SerializeField] private float            deliveryTime = 2.0f;
+    [SerializeField] private Transform        spawnArea;
+
+    public List<GameObject> MonsterList { get => monsterList; }
 
     private void Awake()
     {
+        Instance = this;
+
         StartCoroutine("Spawn");
     }
 
@@ -21,18 +28,11 @@ public class MonsterSpawner : MonoBehaviour
             // 일정 수에 도달하면 생성x
             if ( FindObjectsOfType<Monster>().Length < spawnCount )
             {
-                // playerList에서 비활성화된 player중 하나 활성화
-                foreach ( GameObject monster in monsterList )
-                {
-                    if ( !monster.activeSelf )
-                    {
-                        monster.transform.position = spawnArea.position;
-                        monster.SetActive(true);
-
-                        StartCoroutine(Delivery(monster.GetComponent<Monster>()));
-                        break;
-                    }
-                }
+                // monsterList에서 비활성화된 player중 하나 활성화
+                GameObject monster = monsterList.Find(x => !x.activeSelf);
+                monster.transform.position = spawnArea.position;
+                monster.SetActive(true);
+                StartCoroutine(Delivery(monster.GetComponent<Monster>()));
             }
 
             yield return new WaitForSeconds(spawnTime);

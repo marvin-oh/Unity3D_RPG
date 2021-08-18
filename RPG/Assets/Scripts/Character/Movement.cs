@@ -5,7 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float   moveSpeed = 5.0f;   // 이동 속도
-    [SerializeField] private float   gravity = -9.8f;    // 중력 계수
+    [SerializeField] private float   gravity   = -9.8f;  // 중력 계수
     [SerializeField] private float   jumpForce = 2.0f;   // 점프 힘
 
     private Vector3 moveDirection;      // 이동 방향
@@ -38,12 +38,15 @@ public class Movement : MonoBehaviour
         moveDirection = new Vector3(direction.x, moveDirection.y, direction.z);
     }
 
-    public void JumpTo()
+    public bool JumpTo()
     {
         // 캐릭터가 땅을 밟고 있으면 점프
         if ( characterController.isGrounded == true )
         {
             moveDirection.y = jumpForce;
+            return true;
         }
+
+        return false;
     }
 }

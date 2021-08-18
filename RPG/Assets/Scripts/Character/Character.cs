@@ -45,10 +45,17 @@ public class Character : MonoBehaviour
     {
         set
         {
+            if ( value < hp )
+            {
+                GameObject hitEffect = EffectPool.Instance.HitEffect();
+                hitEffect.transform.position = transform.position;
+                hitEffect.SetActive(true);
+            }
+
             hp = Mathf.Clamp(value, 0, MaxHp);
             hpSlider.value = Hp / MaxHp;
 
-            if (Hp == 0)
+            if  ( Hp == 0 )
             {
                 canMove = false;
 
@@ -115,16 +122,25 @@ public class Character : MonoBehaviour
         {
             movement.MoveTo(Vector3.zero);
             GetComponent<Animator>().SetBool("Walk", false);
+            GetComponent<Animator>().ResetTrigger("Jump");
             return;
         }
 
         movement.MoveTo(direction);
-        GetComponent<Animator>().SetBool("Walk", direction != Vector3.zero);
+        if ( direction != Vector3.zero )
+        {
+            GetComponent<Animator>().SetBool("Walk", true);
+            GetComponent<Animator>().ResetTrigger("Jump");
+        }
+        else
+        {
+            GetComponent<Animator>().SetBool("Walk", false);
+        }
     }
 
     public void JumpTo()
     {
-        movement.JumpTo();
+        if ( movement.JumpTo() ) { GetComponent<Animator>().SetTrigger("Jump"); }
     }
 
     public virtual void Attack()

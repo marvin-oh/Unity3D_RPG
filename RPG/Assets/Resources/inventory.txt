@@ -1,1 +1,1 @@
-{"target":[{"name":"체력물약","count":100,"desc":"소비시 체력을 100 회복한다.","id":0,"type":1},{"name":"마나물약","count":10,"desc":"소비시 마나를 50 회복한다.","id":1,"type":1},{"name":"경험치물약","count":2,"desc":"소비시 경험치를 10 획득한다.","id":2,"type":1},{"name":"항아리","count":1000,"desc":"물약을 만드는데 필요한 재료","id":3,"type":2}]}
+{"target":[{"name":"HP Potion","count":103,"desc":"HP + 100","id":0,"type":1},{"name":"EXP Potion","count":4,"desc":"EXP + 10","id":2,"type":1},{"name":"Jar","count":1000,"desc":"Just a Jar","id":3,"type":2},{"name":"Sword","count":1,"desc":"Simple Sword","id":4,"type":0}]}

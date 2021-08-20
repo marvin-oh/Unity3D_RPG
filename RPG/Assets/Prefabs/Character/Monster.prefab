@@ -2509,7 +2509,7 @@ GameObject:
   - component: {fileID: 1279193760024378019}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Attackable
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2558,6 +2558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7deb458ccfc73db4b870bfd0a220bf6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   level: 1
   maxLevel: 99
   hp: 100
@@ -2566,8 +2567,11 @@ MonoBehaviour:
   attackCollision: {fileID: 6095229142750498619}
   hpSliderPrefab: {fileID: 7945896228353710611, guid: bc91f2f81f59319499c2e136713fb212, type: 3}
   levelTextPrefab: {fileID: 2450237962938758789, guid: 79832218efd654d45b8aba2d61674649, type: 3}
-  dropExp: 50
   detectRange: 10
+  dropExp: 50
+  droppedItems:
+  - {fileID: 1840077904567107489, guid: 20ba1de895ca02d47a6c75bc036194e1, type: 3}
+  - {fileID: 1840077904567107489, guid: 6609f7c88d934c44eb88915f273e5f35, type: 3}
 --- !u!143 &-1006788171123232874
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2758,6 +2762,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 419485368210994637, guid: 68151e0e685258245b860994df52c8c2, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 419485368210994637, guid: 68151e0e685258245b860994df52c8c2, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 419485368210994639, guid: 68151e0e685258245b860994df52c8c2, type: 3}

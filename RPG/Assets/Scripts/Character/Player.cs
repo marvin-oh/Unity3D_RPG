@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 public class Player : Character
 {
+    [Header("Inventory")]
+    [SerializeField] private Inventory inventory;
+
+    [Header("UI")]
     [SerializeField] private GameObject expSliderPrefab;  // 경험치 Slider UI 프리팹
     private Slider expSlider;                             // 경험치 Slider UI
-
     private float  currentExp = 0;  // 현재 경험치
     private float  maxExp = 300;    // 최대 경험치
+
+    public Inventory Inventory { get => inventory; }
 
     protected override void OnEnable()
     {
@@ -20,6 +25,16 @@ public class Player : Character
         GameObject expSliderClone = Instantiate(expSliderPrefab, canvas.transform);
         expSlider = expSliderClone.GetComponent<Slider>();
         expSlider.value = currentExp / maxExp;
+    }
+
+    /// <summary>
+    /// 캐릭터 사망 (Animation에서 호출)
+    /// </summary>
+    protected override void Die()
+    {
+        GetComponent<PlayerController>().enabled = false;
+
+        base.Die();
     }
 
     public void IncreaseExp(float exp)

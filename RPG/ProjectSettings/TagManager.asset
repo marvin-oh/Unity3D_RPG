@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Attackable
   - MainCanvas
   - Inventory
   - Status
+  - Monster
   layers:
   - Default
   - TransparentFX

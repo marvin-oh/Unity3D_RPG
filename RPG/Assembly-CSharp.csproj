@@ -53,24 +53,27 @@
     <UnityVersion>2020.3.0f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
+    <Compile Include="Assets\Scripts\Pooling\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\Character\Player.cs" />
-    <Compile Include="Assets\Scripts\Weapon.cs" />
-    <Compile Include="Assets\Scripts\UI\Item.cs" />
+    <Compile Include="Assets\Scripts\Item\Weapon.cs" />
+    <Compile Include="Assets\Scripts\Item\Item.cs" />
+    <Compile Include="Assets\Scripts\Pooling\EffectPool.cs" />
+    <Compile Include="Assets\Scripts\UI\InventoryPanel.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
     <Compile Include="Assets\Scripts\UI\Slot.cs" />
+    <Compile Include="Assets\Scripts\Item\DroppedItem.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory.cs" />
-    <Compile Include="Assets\Scripts\WeaponManager.cs" />
-    <Compile Include="Assets\Scripts\UI\Serialization.cs" />
+    <Compile Include="Assets\Scripts\Item\WeaponManager.cs" />
+    <Compile Include="Assets\Scripts\Character\Serialization.cs" />
     <Compile Include="Assets\Scripts\Character\Movement.cs" />
     <Compile Include="Assets\Scripts\Character\Monster.cs" />
     <Compile Include="Assets\Scripts\UI\CanvasAutoRotate.cs" />
     <Compile Include="Assets\Scripts\UI\CameraController.cs" />
     <Compile Include="Assets\Scripts\Character\AttackCollision.cs" />
-    <Compile Include="Assets\Scripts\MonsterSpawner.cs" />
-    <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
     <Compile Include="Assets\Scripts\EffectAutoDisable.cs" />
-    <Compile Include="Assets\Scripts\Pooling\EffectPool.cs" />
+    <Compile Include="Assets\Scripts\Pooling\MonsterSpawner.cs" />
+    <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Pooling\ItemPool.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

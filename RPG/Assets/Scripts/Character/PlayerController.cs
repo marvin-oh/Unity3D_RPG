@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private void ToggleUI(GameObject ui)
     {
         ui.SetActive(!ui.activeInHierarchy);
+        if ( ui == inventoryPanel ) { ui.GetComponent<InventoryPanel>().SlotUpdate(player); }
 
         bool uiMode = inventoryPanel.activeInHierarchy | statusPanel.activeInHierarchy;
 

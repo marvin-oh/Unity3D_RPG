@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum CharacterType { NPC, Player, Monster, }
+
 public class Character : MonoBehaviour
 {
     private Movement movement;
@@ -11,6 +13,7 @@ public class Character : MonoBehaviour
     private Canvas   canvas;
 
     [Header("Info")]
+    [SerializeField] private   CharacterType type;    // 타입
     [SerializeField] private   int   level    = 1;    // 레벨
     [SerializeField] private   int   maxLevel = 99;   // 최대 레벨
     [SerializeField] protected float hp;              // 현재 체력
@@ -27,6 +30,8 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject levelTextPrefab;  // 레벨 Text UI 프리팹
     private Slider           hpSlider;  // 체력 Slider UI
     private TextMeshProUGUI  levelText; // 레벨 Text UI
+
+    public CharacterType Type { get => type; }
 
     protected int Level
     {
@@ -91,6 +96,11 @@ public class Character : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if ( transform.position.y < 0 ) { Die(); }
+    }
+
     protected virtual void OnEnable()
     {
         movement = GetComponent<Movement>();
@@ -115,6 +125,7 @@ public class Character : MonoBehaviour
         // 이동 가능
         canMove = true;
     }
+
 
     public void MoveTo(Vector3 direction)
     {
@@ -160,6 +171,9 @@ public class Character : MonoBehaviour
         attackCollision.SetActive(true);
     }
 
+    /// <summary>
+    /// 데미지 피격시 호출
+    /// </summary>
     public virtual void TakeDamage(float damage, Transform attacker) => Hp -= damage;
 
     /// <summary>

@@ -5,14 +5,29 @@ public enum MonsterState { SearchTarget=0, Chase, TryAttack, }
 
 public class Monster : Character
 {
-    [Header("EXP")]
-    [SerializeField] private float dropExp = 50.0f;      // 드랍 경험치
-
     [Header("Attack")]
     [SerializeField] private float detectRange = 10.0f;
 
+    [Header("EXP")]
+    [SerializeField] private float dropExp = 50.0f;      // 드랍 경험치
+
+    [Header("Drop Item")]
+    [SerializeField] private DroppedItem[] droppedItems;
+
     private GameObject   attackTarget = null;  // 공격 대상
     private MonsterState monsterState;         // Monster FSM
+
+
+    private void Update()
+    {
+        if ( attackTarget != null )
+        {
+            // Player를 바라보도록 설정
+            Vector3 position = new Vector3(attackTarget.transform.position.x, transform.position.y, attackTarget.transform.position.z);
+            transform.LookAt(position);
+        }
+    }
+
 
     public override void TakeDamage(float damage, Transform attacker)
     {
@@ -25,16 +40,9 @@ public class Monster : Character
             StopAllCoroutines();
             MoveTo(Vector3.zero);
             attackTarget = null;
-        }
-    }
 
-    private void Update()
-    {
-        if ( attackTarget != null )
-        {
-            // Player를 바라보도록 설정
-            Vector3 position = new Vector3(attackTarget.transform.position.x, transform.position.y, attackTarget.transform.position.z);
-            transform.LookAt(position);
+            // 아이템 드롭
+            ItemPool.Instance.DropItem(droppedItems[Random.Range(0, droppedItems.Length)], transform.position);
         }
     }
 

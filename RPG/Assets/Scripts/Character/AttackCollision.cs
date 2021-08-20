@@ -10,11 +10,13 @@ public class AttackCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ( other.CompareTag("Attackable") )
+        Character attacker = GetComponentInParent<Character>();
+        CharacterType type = attacker.Type;
+        if ( ((type == CharacterType.Player) && other.CompareTag("Monster")) ||
+             ((type == CharacterType.Monster) && other.CompareTag("Player")) )
         {
-            Transform attacker = GetComponentInParent<Character>().transform;
-            float damage = GetComponentInParent<Character>().Weapon.Damage;
-            other.GetComponent<Character>().TakeDamage(damage, attacker);
+            float damage = attacker.Weapon.Damage;
+            other.GetComponent<Character>().TakeDamage(damage, attacker.transform);
         }
     }
 

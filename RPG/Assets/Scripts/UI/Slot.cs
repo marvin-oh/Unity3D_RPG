@@ -8,13 +8,12 @@ public class Slot : MonoBehaviour
     [SerializeField] private Text  itemNameText;
     [SerializeField] private Text  itemCountText;
 
-    [SerializeField] private Sprite[] sprites;
-
     public Item Item { set; get; }
 
     private void Update()
     {
-        itemImage.sprite   = sprites[Item.id];
+        if ( Item == null ) { return; }
+        itemImage.sprite   = ItemManager.Instance.GetSprite(Item.id);
         itemNameText.text  = Item.name;
         itemCountText.text = Item.count.ToString();
     }

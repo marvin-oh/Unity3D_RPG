@@ -1,26 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryPanel : MonoBehaviour
 {
     [SerializeField] private GameObject[] slots;
+    [SerializeField] private Text         goldText;
 
     private List<Item> curItems    = new List<Item>();
-    private ItemType   currentType = ItemType.weapon;
+    private ItemType   currentType = ItemType.Equipment;
     private Player     target;
 
     /// <summary>
-    /// 슬롯에 아이템들을 나열한다.
+    /// target의 아이템들을 슬롯에 나열한다.
     /// </summary>
-    public void SlotUpdate(Player _target)
+    public void Show(Player _target)
     {
         target = _target;
 
         List<Item> allItems = target.Inventory.Load();
 
         curItems.Clear();
-        curItems = allItems.FindAll(x => x.type == (int)currentType);
+        curItems = allItems.FindAll(x => x.type == currentType);
 
         for (int i = 0; i < slots.Length; ++i)
         {
@@ -28,6 +30,8 @@ public class InventoryPanel : MonoBehaviour
             slots[i].SetActive(isExist);
             slots[i].GetComponent<Slot>().Item = isExist ? curItems[i] : null;
         }
+
+        goldText.text = string.Format("{0:##,##0}", target.Inventory.Gold);
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public class InventoryPanel : MonoBehaviour
         {
             currentType = (ItemType)type;
 
-            SlotUpdate(target);
+            Show(target);
         }
     }
 }

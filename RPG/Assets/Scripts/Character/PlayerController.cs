@@ -50,12 +50,14 @@ public class PlayerController : MonoBehaviour
         if ( Input.GetKeyDown(KeyCode.Alpha2) ) { player.ChangeWeapon("Sword"); }
         if ( Input.GetKeyDown(KeyCode.Alpha3) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Hand")); }
         if ( Input.GetKeyDown(KeyCode.Alpha4) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Sword")); }
+        if ( Input.GetKeyDown(KeyCode.Alpha5) ) { player.IncreaseGold(3000); }
     }
 
     private void ToggleUI(GameObject ui)
     {
         ui.SetActive(!ui.activeInHierarchy);
-        if ( ui == inventoryPanel ) { ui.GetComponent<InventoryPanel>().SlotUpdate(player); }
+        if      ( ui == inventoryPanel ) { ui.GetComponent<InventoryPanel>().Show(player); }
+        else if ( ui == statusPanel    ) { ui.GetComponent<StatusPanel>().Show(player); }
 
         bool uiMode = inventoryPanel.activeInHierarchy | statusPanel.activeInHierarchy;
 

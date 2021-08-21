@@ -108,8 +108,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af2ca5bdebd76844a50fb7b6614bf06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: HP Potion
-  count: 1
-  desc: HP +100
-  itemID: 0
-  itemType: 1
+  ItemSO: {fileID: 11400000, guid: f431aace03c3fec4fb2d7a1f1963ffa3, type: 2}
+  id: 10

@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class DroppedItem : MonoBehaviour
 {
-    [SerializeField] private string itemName;   // 이름
-    [SerializeField] private int    count;      // 개수
-    [SerializeField] private string desc;       // 설명
-    [SerializeField] private int    itemID;     // ID
-    [SerializeField] private int    itemType;   // 타입
+    [SerializeField] private ItemSO ItemSO;
+    [SerializeField] private int    id;
 
-    public int ID => itemID;
+    public int ID => id;
 
     private void OnTriggerEnter(Collider other)
     {
         if ( other.CompareTag("Player") )
         {
-            print("get DroppedItem: " + itemName);
+            Item item = ItemSO.Items.Find(x => x.id == id);
 
-            other.GetComponent<Player>().Inventory.AddItem(new Item(itemName, count, desc, itemID, itemType));
+            other.GetComponent<Player>().Inventory.AddItem(new Item(item));
             gameObject.SetActive(false);
+
+            GameManager.Instance.Notice("get Item: " + item.name);
         }
     }
 }

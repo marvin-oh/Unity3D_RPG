@@ -11,10 +11,11 @@ public class Player : Character
     [Header("UI")]
     [SerializeField] private GameObject expSliderPrefab;  // 경험치 Slider UI 프리팹
     private Slider expSlider;                             // 경험치 Slider UI
-    private float  currentExp = 0;  // 현재 경험치
-    private float  maxExp = 300;    // 최대 경험치
+    private float  currentExp = 0;      // 현재 경험치
+    private float  maxExp     = 300;    // 최대 경험치
 
     public Inventory Inventory { get => inventory; }
+
 
     protected override void OnEnable()
     {
@@ -27,6 +28,7 @@ public class Player : Character
         expSlider.value = currentExp / maxExp;
     }
 
+
     /// <summary>
     /// 캐릭터 사망 (Animation에서 호출)
     /// </summary>
@@ -35,6 +37,13 @@ public class Player : Character
         GetComponent<PlayerController>().enabled = false;
 
         base.Die();
+    }
+
+    private void LevelUp()
+    {
+        Level++;
+        Hp = MaxHp;
+        currentExp = 0;
     }
 
     public void IncreaseExp(float exp)
@@ -48,10 +57,5 @@ public class Player : Character
         expSlider.value = currentExp / maxExp;
     }
 
-    private void LevelUp()
-    {
-        Level++;
-        Hp = MaxHp;
-        currentExp = 0;
-    }
+    public void IncreaseGold(int gold) => Inventory.IncreaseGold(gold);
 }

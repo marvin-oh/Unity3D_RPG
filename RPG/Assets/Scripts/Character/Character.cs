@@ -19,21 +19,31 @@ public class Character : MonoBehaviour
     [SerializeField] protected float hp;              // 현재 체력
     [SerializeField] protected float maxHp = 100;     // 최대 체력
 
+    [Header("Stat")]
+    [SerializeField] protected int   atk;   // 공격력
+    [SerializeField] protected int   def;   // 방어력
+    [SerializeField] protected int   spd;   // 이동속도
+    [SerializeField] protected float cri;   // 치명타 확률
+    protected Weapon weapon;    // 현재 착용중인 Weapon
+    //protected Helmet helmet;    // 현재 착용중인 Helmet
+    //protected Armor  armor;     // 현재 착용중인 Armor
+    //protected Shoes  shoes;     // 현재 착용중인 Shoes
+
     [Header("Attack")]
     [SerializeField] private Transform  hand;            // 무기 장착 위치
     [SerializeField] private GameObject attackCollision; // 공격시 충돌감지를 위한 GameObject
-    protected Weapon weapon;    // 현재 착용중인 무기
-    private   bool   canMove;   // 이동 가능 여부
+    private bool canMove;   // 이동 가능 여부
 
     [Header("UI")]
     [SerializeField] private GameObject hpSliderPrefab;   // 체력 Slider UI 프리팹
     [SerializeField] private GameObject levelTextPrefab;  // 레벨 Text UI 프리팹
+    [SerializeField] private Text DmgText;          // 데미지 이펙트 Text
     private Slider           hpSlider;  // 체력 Slider UI
     private TextMeshProUGUI  levelText; // 레벨 Text UI
 
     public CharacterType Type { get => type; }
 
-    protected int Level
+    protected int   Level
     {
         set
         {
@@ -45,8 +55,7 @@ public class Character : MonoBehaviour
             return level;
         }
     }
-
-    public float Hp
+    public    float Hp
     {
         set
         {
@@ -55,6 +64,8 @@ public class Character : MonoBehaviour
                 GameObject hitEffect = EffectPool.Instance.HitEffect();
                 hitEffect.transform.position = transform.position;
                 hitEffect.SetActive(true);
+                DmgText.text = string.Format("{0:##,##0}", hp - value);
+                DmgText.gameObject.SetActive(true);
             }
 
             hp = Mathf.Clamp(value, 0, MaxHp);
@@ -76,8 +87,14 @@ public class Character : MonoBehaviour
             return hp;       
         }
     }
+    public    float MaxHp { protected set => maxHp = value; get => maxHp; }
 
-    public float MaxHp { protected set => maxHp = value; get => maxHp; }
+    public int   Atk { get => atk + weapon.Atk; }
+    //public int   Def { get => def + helmet.Def + armor.Def; }
+    public int   Def { get => def; }
+    //public int   Spd { get => spd + shoes.Spd; }
+    public int   Spd { get => spd; }
+    public float Cri { get => cri + weapon.Cri; }
 
     public Weapon Weapon
     {
@@ -95,6 +112,47 @@ public class Character : MonoBehaviour
             return weapon;
         }
     }
+    /*
+    public Helmet Helmet
+    {
+        set
+        {
+            if ( helmet ) { Destroy(helmet.gameObject); }
+            helmet = value;
+        }
+        get
+        {
+            return helmet;
+        }
+    }
+    public Armor  Armor
+    {
+        set
+        {
+            if ( armor ) { Destroy(armor.gameObject); }
+            armor = value;
+        }
+        get
+        {
+            return armor;
+        }
+    }
+    public Shoes  Shoes
+    {
+        set
+        {
+            if ( shoes ) { Destroy(shoes.gameObject); }
+            shoes = value;
+
+            // 이동속도
+            movement.AddSpeed = Spd;
+        }
+        get
+        {
+            return shoes;
+        }
+    }*/
+
 
     private void Update()
     {
@@ -174,7 +232,7 @@ public class Character : MonoBehaviour
     /// <summary>
     /// 데미지 피격시 호출
     /// </summary>
-    public virtual void TakeDamage(float damage, Transform attacker) => Hp -= damage;
+    public virtual void TakeDamage(float damage, Transform attacker) => Hp -= damage * 100 / (100 + def);
 
     /// <summary>
     /// 캐릭터 사망 (Animation에서 호출)
@@ -184,10 +242,7 @@ public class Character : MonoBehaviour
     /// <summary>
     /// 무기 교체 메소드
     /// </summary>
-    public void ChangeWeapon(string _name)
-    {
-        Weapon = Instantiate(WeaponManager.Instance.GetWeapon(_name), hand);
-    }
+    public void ChangeWeapon(string _name) => Weapon = Instantiate(ItemManager.Instance.GetWeapon(_name), hand);
 
     /// <summary>
     /// 공격/사망시 이동 불가 (Animation에서 호출)

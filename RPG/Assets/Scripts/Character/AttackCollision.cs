@@ -3,10 +3,7 @@ using UnityEngine;
 
 public class AttackCollision : MonoBehaviour
 {
-    private void OnEnable()
-    {
-        StartCoroutine("AutoDisable");
-    }
+    private void OnEnable() => Invoke("AutoDisable", 0.1f);
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,16 +12,13 @@ public class AttackCollision : MonoBehaviour
         if ( ((type == CharacterType.Player) && other.CompareTag("Monster")) ||
              ((type == CharacterType.Monster) && other.CompareTag("Player")) )
         {
-            float damage = attacker.Weapon.Damage;
+            float damage   = attacker.Atk;
+            float critical = Random.Range(0f, 1f);
+            damage = attacker.Cri < critical ? damage : damage * Random.Range(1f, 2f);
             other.GetComponent<Character>().TakeDamage(damage, attacker.transform);
         }
     }
 
-    private IEnumerator AutoDisable()
-    {
-        // 0.1초 후에 오브젝트 비활성화
-        yield return new WaitForSeconds(0.1f);
 
-        gameObject.SetActive(false);
-    }
+    private void AutoDisable() => gameObject.SetActive(false);
 }

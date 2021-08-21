@@ -236,8 +236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e3e3f8e5e0015479fe2d238c97f25c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemSO: {fileID: 11400000, guid: f431aace03c3fec4fb2d7a1f1963ffa3, type: 2}
   weaponName: Sword
-  weaponType: 1
-  damage: 50
+  attackDamage: 10
   attackRange: 2
   attackSpeed: 2
+  critical: 0.15

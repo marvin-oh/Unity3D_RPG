@@ -9,5 +9,16 @@ public class EffectPool : MonoBehaviour
 
     [SerializeField] private List<GameObject> hitEffects;
 
-    public GameObject HitEffect() => hitEffects.Find(x => !x.activeSelf);
+    public void HitEffect(Vector3 position)
+    {
+        foreach ( GameObject hitEffect in hitEffects )
+        {
+            if ( !hitEffect.activeSelf )
+            {
+                hitEffect.transform.position = position;
+                hitEffect.SetActive(true);
+                return;
+            }
+        }
+    }
 }

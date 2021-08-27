@@ -1,25 +1,39 @@
+using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
     private Player player;
+    private string filePath;
 
-    [SerializeField] private Transform  cameraTransform;
-    [SerializeField] private GameObject statusPanel;
-    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private KeyCode   jumpKeyCode = KeyCode.Space;
 
-    [SerializeField] private KeyCode jumpKeyCode = KeyCode.Space;
+
+    private void Awake() => filePath = Application.dataPath + "/Resources/DB_playerData.txt";
 
     private void OnEnable()
     {
         player = GetComponent<Player>();
 
-        statusPanel.SetActive(false);
-        inventoryPanel.SetActive(false);
+        GameManager.Instance.Player = player;
+        GameManager.Instance.CloseAllPanel();
+        LoadData();
     }
 
-    private void Update() => KeyboardControl();
+    private void OnDisable()
+    {
+        player.Hp = player.MaxHp;
+        SaveData();
+    }
+
+    private void Update()
+    {
+        KeyboardControl();
+    }
+
 
     private void KeyboardControl()
     {
@@ -36,39 +50,73 @@ public class PlayerController : MonoBehaviour
         if ( Input.GetKeyDown(jumpKeyCode) ) { player.JumpTo(); }
 
         // UI 창 팝업
-        if ( Input.GetKeyDown(KeyCode.I) )      { ToggleUI(inventoryPanel); }
-        if ( Input.GetKeyDown(KeyCode.E) )      { ToggleUI(statusPanel); }
-        if ( Input.GetKeyDown(KeyCode.Escape) ) { QuitAllUI(); }
-
-        // UI Mode 수행중 동작 x
-        if ( inventoryPanel.activeInHierarchy || statusPanel.activeInHierarchy ) { return; }
+        if ( Input.GetKeyDown(KeyCode.I) )      { ToggleUI(GameManager.Instance.InventoryPanel); }
+        if ( Input.GetKeyDown(KeyCode.E) )      { ToggleUI(GameManager.Instance.StatusPanel); }
+        if ( Input.GetKeyDown(KeyCode.Escape) ) { GameManager.Instance.CloseAllPanel(); }
 
         // 마우스 좌클릭시 무기 공격
+        if ( EventSystem.current.IsPointerOverGameObject() ) { return; }
         if ( Input.GetMouseButtonDown(0) ) { player.Attack(); }
         if ( Input.GetKeyDown(KeyCode.R) ) { player.Attack(); }
-        if ( Input.GetKeyDown(KeyCode.Alpha1) ) { player.ChangeWeapon("Hand"); }
-        if ( Input.GetKeyDown(KeyCode.Alpha2) ) { player.ChangeWeapon("Sword"); }
-        if ( Input.GetKeyDown(KeyCode.Alpha3) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Hand")); }
-        if ( Input.GetKeyDown(KeyCode.Alpha4) ) { MonsterSpawner.Instance.MonsterList.ForEach(monster => monster.GetComponent<Monster>().ChangeWeapon("Sword")); }
-        if ( Input.GetKeyDown(KeyCode.Alpha5) ) { player.IncreaseGold(3000); }
     }
 
+    /// <summary>
+    /// UI 활성화/비활성화 (Status/Inventory)
+    /// </summary>
     private void ToggleUI(GameObject ui)
     {
-        ui.SetActive(!ui.activeInHierarchy);
-        if      ( ui == inventoryPanel ) { ui.GetComponent<InventoryPanel>().Show(player); }
-        else if ( ui == statusPanel    ) { ui.GetComponent<StatusPanel>().Show(player); }
-
-        bool uiMode = inventoryPanel.activeInHierarchy | statusPanel.activeInHierarchy;
-
-        Camera.main.GetComponent<CameraController>().UIMode(uiMode);
+        bool isOff = !ui.activeInHierarchy;
+        ui.SetActive(isOff);
+        if      ( isOff && (ui == GameManager.Instance.InventoryPanel) ) { ui.GetComponent<InventoryPanel>().Show(); }
+        else if ( isOff && (ui == GameManager.Instance.StatusPanel) )    { ui.GetComponent<StatusPanel>().Show(); }
     }
 
-    private void QuitAllUI()
+    /// <summary>
+    /// PlayerData를 저장 (Inventory에서 호출)
+    /// </summary>
+    public void SaveData()
     {
-        statusPanel.SetActive(false);
-        inventoryPanel.SetActive(false);
+        string jsonData = JsonUtility.ToJson(new PlayerData(player));
+        //byte[] bytes    = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        //string code     = System.Convert.ToBase64String(bytes);
+        //File.WriteAllText(filePath, code);
+        File.WriteAllText(filePath, jsonData);
+    }
 
-        Camera.main.GetComponent<CameraController>().UIMode(false);
+    /// <summary>
+    /// 저장된 PlayerData를 불러온다 (Inventory에서 호출)
+    /// </summary>
+    public void LoadData()
+    {
+        if ( !File.Exists(filePath) ) { SaveData(); }
+
+        //string code     = File.ReadAllText(filePath);
+        //byte[] bytes    = System.Convert.FromBase64String(code);
+        //string jsonData = System.Text.Encoding.UTF8.GetString(bytes);
+        string jsonData = File.ReadAllText(filePath);
+        player.LoadData(JsonUtility.FromJson<PlayerData>(jsonData));
+    }
+}
+
+[System.Serializable]
+public class PlayerData
+{
+    public int   Level;
+    public float Hp;
+    public float Exp;
+    public int   WeaponID;
+    public int   ShoesID;
+    public int   HalmetID;
+    public int   ArmorID;
+
+    public PlayerData(Player player)
+    {
+        Level    = player.Level;
+        Hp       = player.Hp;
+        Exp      = player.Exp;
+        WeaponID = player.Weapon.ID;
+        ShoesID  = player.Shoes.ID;
+        HalmetID = player.Halmet.ID;
+        ArmorID  = player.Armor.ID;
     }
 }

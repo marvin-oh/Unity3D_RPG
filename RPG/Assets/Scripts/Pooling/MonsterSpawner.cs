@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    public static MonsterSpawner Instance { private set; get; }
-
     [SerializeField] private List<GameObject> monsterList;
     [SerializeField] private int              spawnCount   = 5;
     [SerializeField] private float            spawnTime    = 5.0f;
@@ -14,19 +12,16 @@ public class MonsterSpawner : MonoBehaviour
 
     public List<GameObject> MonsterList { get => monsterList; }
 
-    private void Awake()
-    {
-        Instance = this;
 
-        StartCoroutine("Spawn");
-    }
+    private void Start() => StartCoroutine("Spawn");
+
 
     private IEnumerator Spawn()
     {
         while ( true )
         {
             // 일정 수에 도달하면 생성x
-            if ( FindObjectsOfType<Monster>().Length < spawnCount )
+            if ( monsterList.FindAll(x => x.activeSelf).Count < spawnCount )
             {
                 // monsterList에서 비활성화된 player중 하나 활성화
                 GameObject monster = monsterList.Find(x => !x.activeSelf);

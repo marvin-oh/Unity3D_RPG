@@ -1,0 +1,1 @@
+{"Level":15,"Hp":100.0,"Exp":200.0,"WeaponID":2,"ShoesID":12,"HalmetID":20,"ArmorID":30}

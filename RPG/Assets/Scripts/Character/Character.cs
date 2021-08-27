@@ -8,152 +8,21 @@ public enum CharacterType { NPC, Player, Monster, }
 
 public class Character : MonoBehaviour
 {
-    private Movement movement;
-    private Animator animator;
-    private Canvas   canvas;
+    protected Movement movement;
+    protected Animator animator;
+    protected Canvas   canvas;
 
     [Header("Info")]
-    [SerializeField] private   CharacterType type;    // 타입
-    [SerializeField] private   int   level    = 1;    // 레벨
-    [SerializeField] private   int   maxLevel = 99;   // 최대 레벨
-    [SerializeField] protected float hp;              // 현재 체력
-    [SerializeField] protected float maxHp = 100;     // 최대 체력
+    [SerializeField] private   CharacterType type;      // 타입
+    [SerializeField] protected string characterName;    // 캐릭터명
+    [SerializeField] protected Text   nameText;         // 캐릭터 이름 Text
 
-    [Header("Stat")]
-    [SerializeField] protected int   atk;   // 공격력
-    [SerializeField] protected int   def;   // 방어력
-    [SerializeField] protected int   spd;   // 이동속도
-    [SerializeField] protected float cri;   // 치명타 확률
-    protected Weapon weapon;    // 현재 착용중인 Weapon
-    //protected Helmet helmet;    // 현재 착용중인 Helmet
-    //protected Armor  armor;     // 현재 착용중인 Armor
-    //protected Shoes  shoes;     // 현재 착용중인 Shoes
-
-    [Header("Attack")]
-    [SerializeField] private Transform  hand;            // 무기 장착 위치
-    [SerializeField] private GameObject attackCollision; // 공격시 충돌감지를 위한 GameObject
-    private bool canMove;   // 이동 가능 여부
-
-    [Header("UI")]
-    [SerializeField] private GameObject hpSliderPrefab;   // 체력 Slider UI 프리팹
-    [SerializeField] private GameObject levelTextPrefab;  // 레벨 Text UI 프리팹
-    [SerializeField] private Text DmgText;          // 데미지 이펙트 Text
-    private Slider           hpSlider;  // 체력 Slider UI
-    private TextMeshProUGUI  levelText; // 레벨 Text UI
+    protected bool canMove;   // 이동 가능 여부
 
     public CharacterType Type { get => type; }
+    public string Name => characterName;
 
-    protected int   Level
-    {
-        set
-        {
-            level = Mathf.Clamp(value, 0, maxLevel);
-            levelText.text = "Lv." + level.ToString();
-        }
-        get
-        {
-            return level;
-        }
-    }
-    public    float Hp
-    {
-        set
-        {
-            if ( value < hp )
-            {
-                GameObject hitEffect = EffectPool.Instance.HitEffect();
-                hitEffect.transform.position = transform.position;
-                hitEffect.SetActive(true);
-                DmgText.text = string.Format("{0:##,##0}", hp - value);
-                DmgText.gameObject.SetActive(true);
-            }
-
-            hp = Mathf.Clamp(value, 0, MaxHp);
-            hpSlider.value = Hp / MaxHp;
-
-            if  ( Hp == 0 )
-            {
-                canMove = false;
-
-                animator.Play("CharacterDeath");
-            }
-            else
-            {
-                animator.Play("CharacterHit");
-            }
-        }
-        get
-        {
-            return hp;       
-        }
-    }
-    public    float MaxHp { protected set => maxHp = value; get => maxHp; }
-
-    public int   Atk { get => atk + weapon.Atk; }
-    //public int   Def { get => def + helmet.Def + armor.Def; }
-    public int   Def { get => def; }
-    //public int   Spd { get => spd + shoes.Spd; }
-    public int   Spd { get => spd; }
-    public float Cri { get => cri + weapon.Cri; }
-
-    public Weapon Weapon
-    {
-        set
-        {
-            if ( weapon ) { Destroy(weapon.gameObject); }
-            weapon = value;
-
-            // 무기 정보에 따라 충돌범위 설정
-            attackCollision.transform.localPosition = new Vector3(0, 0, Weapon.AttackRange);
-            attackCollision.transform.localScale    = new Vector3(attackCollision.transform.localScale.x, Weapon.AttackRange, attackCollision.transform.localScale.z);
-        }
-        get
-        {
-            return weapon;
-        }
-    }
-    /*
-    public Helmet Helmet
-    {
-        set
-        {
-            if ( helmet ) { Destroy(helmet.gameObject); }
-            helmet = value;
-        }
-        get
-        {
-            return helmet;
-        }
-    }
-    public Armor  Armor
-    {
-        set
-        {
-            if ( armor ) { Destroy(armor.gameObject); }
-            armor = value;
-        }
-        get
-        {
-            return armor;
-        }
-    }
-    public Shoes  Shoes
-    {
-        set
-        {
-            if ( shoes ) { Destroy(shoes.gameObject); }
-            shoes = value;
-
-            // 이동속도
-            movement.AddSpeed = Spd;
-        }
-        get
-        {
-            return shoes;
-        }
-    }*/
-
-
+ 
     private void Update()
     {
         if ( transform.position.y < 0 ) { Die(); }
@@ -165,26 +34,17 @@ public class Character : MonoBehaviour
         animator = GetComponent<Animator>();
         canvas   = GetComponentInChildren<Canvas>();
 
-        // UI 세팅 - 체력 Slider UI
-        GameObject hpSliderClone = Instantiate(hpSliderPrefab, canvas.transform);
-        hpSlider = hpSliderClone.GetComponent<Slider>();
-
-        // UI 세팅 - 레벨 Text UI
-        GameObject levelTextClone = Instantiate(levelTextPrefab, canvas.transform);
-        levelText = levelTextClone.GetComponent<TextMeshProUGUI>();
-
         // 캐릭터 정보 설정
-        Hp    = MaxHp;
-        Level = level;
-
-        // 무기 설정
-        ChangeWeapon("Hand");
+        nameText.text = characterName;
 
         // 이동 가능
         canMove = true;
     }
 
 
+    /// <summary>
+    /// 진행 방향 설정
+    /// </summary>
     public void MoveTo(Vector3 direction)
     {
         if ( !canMove )
@@ -207,32 +67,13 @@ public class Character : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 캐릭터 점프
+    /// </summary>
     public void JumpTo()
     {
         if ( movement.JumpTo() ) { GetComponent<Animator>().SetTrigger("Jump"); }
     }
-
-    public virtual void Attack()
-    {
-        if ( !canMove ) { return; }
-
-        // Attack 애니메이션
-        animator.SetTrigger("Attack");
-    }
-
-    /// <summary>
-    /// 공격시 충돌영역 활성화 메소드 (Aniamtion에서 호출)
-    /// </summary>
-    private void OnAttackCollision()
-    {
-        // 충돌감지를 위한 GameObject 활성화
-        attackCollision.SetActive(true);
-    }
-
-    /// <summary>
-    /// 데미지 피격시 호출
-    /// </summary>
-    public virtual void TakeDamage(float damage, Transform attacker) => Hp -= damage * 100 / (100 + def);
 
     /// <summary>
     /// 캐릭터 사망 (Animation에서 호출)
@@ -240,14 +81,8 @@ public class Character : MonoBehaviour
     protected virtual void Die() => gameObject.SetActive(false);
 
     /// <summary>
-    /// 무기 교체 메소드
-    /// </summary>
-    public void ChangeWeapon(string _name) => Weapon = Instantiate(ItemManager.Instance.GetWeapon(_name), hand);
-
-    /// <summary>
     /// 공격/사망시 이동 불가 (Animation에서 호출)
     /// </summary>
     public void EnableMove()  => canMove = true;
-
     public void DisableMove() => canMove = false;
 }

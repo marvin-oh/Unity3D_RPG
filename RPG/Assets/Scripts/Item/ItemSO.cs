@@ -7,23 +7,28 @@ public enum ItemType { Equipment=0, Consumable, Material }
 [System.Serializable]
 public class Item
 {
-    public string   name;   // 이름
-    public int      count;  // 개수
-    public string   desc;   // 설명
-    public int      id;     // ID
     public ItemType type;   // 타입
+    public int      id;     // ID
+    public string   name;   // 이름
+    public string   desc;   // 설명
+    public int      price;  // 가격
+    public int      count;  // 개수
 
-    public Item(string _name, int _count, string _desc, int _id, ItemType _type)
+    public Item(ItemType _type, int _id, string _name, string _desc, int _price, int _count)
     {
-        name  = _name;
-        count = _count;
-        desc  = _desc;
-        id    = _id;
         type  = _type;
+        id    = _id;
+        name  = _name;
+        desc  = _desc;
+        price = _price;
+        count = _count;
     }
 
     public Item(Item target)
-        : this(target.name, target.count, target.desc, target.id, target.type) { }
+        : this(target.type, target.id, target.name, target.desc, target.price, target.count) { }
+
+    public Item(Item target, int _count)
+        : this(target.type, target.id, target.name, target.desc, target.price, target.count * _count) { }
 }
 
 [CreateAssetMenu(fileName = "ItemSO", menuName = "Scriptable Object/ItemSO")]

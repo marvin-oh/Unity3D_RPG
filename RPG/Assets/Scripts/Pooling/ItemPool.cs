@@ -12,13 +12,16 @@ public class ItemPool : MonoBehaviour
     /// <summary>
     /// 해당 위치에 Item을 드롭한다.
     /// </summary>
-    public void DropItem(DroppedItem item, Vector3 position)
+    public void DropItem(DroppedItem droppedItem, Vector3 position)
     {
-        GameObject target = items.Find(x => (!x.activeSelf) && (x.GetComponent<DroppedItem>().ID == item.ID));
-        if ( target != null )
+        foreach ( GameObject item in items)
         {
-            target.transform.position = position;
-            target.SetActive(true);
+            if ( !item.activeSelf && (item.GetComponent<DroppedItem>().ID == droppedItem.ID) )
+            {
+                item.transform.position = position;
+                item.SetActive(true);
+                return;
+            }
         }
     }
 }

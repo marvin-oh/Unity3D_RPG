@@ -5,40 +5,35 @@ using UnityEngine.UI;
 
 public class StatusPanel : MonoBehaviour
 {
-    [Header("Equip Panel")]
-    [SerializeField] private Image  weaponImage;
-    [SerializeField] private Image  footImage;
-    [SerializeField] private Image  headImage;
-    [SerializeField] private Image  bodyImage;
-    [SerializeField] private Sprite blankSprite;
-
     [Header("Stat Panel")]
     [SerializeField] private Text hpText;
+    [SerializeField] private Text mpText;
+    [SerializeField] private Text expText;
     [SerializeField] private Text atkText;
     [SerializeField] private Text defText;
     [SerializeField] private Text spdText;
     [SerializeField] private Text criText;
 
-    private Player target;
+    private Player player;
+
+
+    private void Update() => Show();
+
 
     /// <summary>
     /// target의 Status 정보를 보여준다.
     /// </summary>
-    public void Show(Player _target)
+    public void Show()
     {
-        target = _target;
-
-        // Equip Panel Update
-        weaponImage.sprite = ItemManager.Instance.GetSprite(target.Weapon.ID);
-        //footImage.sprite   = ItemManager.Instance.GetSprite(target.Shoes.ID);
-        //headImage.sprite   = ItemManager.Instance.GetSprite(target.Helmet.ID);
-        //bodyImage.sprite   = ItemManager.Instance.GetSprite(target.Armor.ID);
+        player = GameManager.Instance.Player;
 
         // Stat Panel Update
-        hpText.text  = string.Format("{0:##,##0} / {1:##,##0}", target.Hp, target.MaxHp);
-        atkText.text = string.Format("{0:##,##0}", target.Atk);
-        defText.text = string.Format("{0:##,##0}", target.Def);
-        spdText.text = string.Format("{0:##,##0}", target.Spd);
-        criText.text = string.Format("{0:##,##0}%", target.Cri * 100);
+        hpText.text  = string.Format("{0:##,##0} / {1:##,##0}", player.Hp, player.MaxHp);
+        mpText.text  = string.Format("{0:##,##0} / {1:##,##0}", player.Mp, player.MaxMp);
+        expText.text = string.Format("{0:##,##0} / {1:##,##0}", player.Exp, player.MaxExp);
+        atkText.text = string.Format("{0:##,##0}", player.Atk);
+        defText.text = string.Format("{0:##,##0}", player.Def);
+        spdText.text = string.Format("{0:##,##0}", player.Spd);
+        criText.text = string.Format("{0:##,##0}%", player.Cri * 100);
     }
 }

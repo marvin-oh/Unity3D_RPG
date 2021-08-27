@@ -9,7 +9,7 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Transform        spawnArea;
 
-    private void Awake() => StartCoroutine("Spawn");
+    private void Start() => StartCoroutine("Spawn");
 
     private IEnumerator Spawn()
     {
@@ -21,8 +21,8 @@ public class PlayerSpawner : MonoBehaviour
                 // playerList에서 비활성화된 player중 하나 활성화
                 GameObject player = playerList.Find(x => !x.activeSelf);
                 player.transform.position = spawnArea.position;
-                player.GetComponent<PlayerController>().enabled = true;
                 player.SetActive(true);
+                player.GetComponent<PlayerController>().enabled = true;
                 cameraController.Setup(player);
             }
 

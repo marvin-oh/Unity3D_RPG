@@ -10,40 +10,36 @@ public class InventoryPanel : MonoBehaviour
 
     private List<Item> curItems    = new List<Item>();
     private ItemType   currentType = ItemType.Equipment;
-    private Player     target;
+    private Player player;
+
+
+    private void Update() => Show();
+
 
     /// <summary>
     /// target의 아이템들을 슬롯에 나열한다.
     /// </summary>
-    public void Show(Player _target)
+    public void Show()
     {
-        target = _target;
+        player = GameManager.Instance.Player;
 
-        List<Item> allItems = target.Inventory.Load();
+        List<Item> allItems = player.Inventory.Load();
 
         curItems.Clear();
         curItems = allItems.FindAll(x => x.type == currentType);
 
-        for (int i = 0; i < slots.Length; ++i)
+        for ( int i=0; i<slots.Length; ++i )
         {
             bool isExist = i < curItems.Count;
             slots[i].SetActive(isExist);
-            slots[i].GetComponent<Slot>().Item = isExist ? curItems[i] : null;
+            slots[i].GetComponent<InventorySlot>().Item = isExist ? curItems[i] : null;
         }
 
-        goldText.text = string.Format("{0:##,##0}", target.Inventory.Gold);
+        goldText.text = string.Format("{0:##,##0}", player.Inventory.Gold);
     }
 
     /// <summary>
     /// 탭 메뉴 클릭시 인벤토리 갱신
     /// </summary>
-    public void TabClick(int type)
-    {
-        if ( currentType != (ItemType)type )
-        {
-            currentType = (ItemType)type;
-
-            Show(target);
-        }
-    }
+    public void TabClick(int type) => currentType = (ItemType)type;
 }

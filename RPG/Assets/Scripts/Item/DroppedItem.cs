@@ -15,10 +15,10 @@ public class DroppedItem : MonoBehaviour
         {
             Item item = ItemSO.Items.Find(x => x.id == id);
 
-            other.GetComponent<Player>().Inventory.AddItem(new Item(item));
+            other.GetComponent<Player>().Inventory.AddItem(item);
             gameObject.SetActive(false);
 
-            GameManager.Instance.Notice("get Item: " + item.name);
+            GameManager.Instance.Notice("get Item: " + item.name + " x" + item.count);
         }
     }
 }

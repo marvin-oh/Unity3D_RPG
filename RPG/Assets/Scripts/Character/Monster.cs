@@ -1,18 +1,25 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum MonsterState { SearchTarget=0, Chase, TryAttack, }
 
-public class Monster : Character
+public class Monster : PlayableCharacter
 {
     [Header("Attack")]
     [SerializeField] private float detectRange = 10.0f;
 
-    [Header("EXP")]
-    [SerializeField] private float dropExp = 50.0f;      // 드랍 경험치
-
     [Header("Drop Item")]
-    [SerializeField] private DroppedItem[] droppedItems;
+    [SerializeField] private float dropExp  = 50.0f; // 드랍 경험치
+    [SerializeField] private int   dropGold = 5;     // 드랍 골드
+    [SerializeField] private List<DroppedItem> droppedItems;
+    [Range(0, 1)] [SerializeField] private List<float> dropPos;
+
+    [Header("Start Equip")]
+    [SerializeField] private string startWeapon;    // 시작시 Weapon
+    [SerializeField] private string startShoes;     // 시작시 Shoes
+    [SerializeField] private string startHalmet;    // 시작시 Halmet
+    [SerializeField] private string startArmor;     // 시작시 Armor
 
     private GameObject   attackTarget = null;  // 공격 대상
     private MonsterState monsterState;         // Monster FSM
@@ -28,6 +35,17 @@ public class Monster : Character
         }
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        // 장비 설정
+        ChangeWeapon(startWeapon);
+        ChangeShoes(startShoes);
+        ChangeHalmet(startHalmet);
+        ChangeArmor(startArmor);
+    }
+
 
     public override void TakeDamage(float damage, Transform attacker)
     {
@@ -36,13 +54,21 @@ public class Monster : Character
         if ( Hp == 0 )
         {
             attacker.GetComponent<Player>()?.IncreaseExp(dropExp);
+            attacker.GetComponent<Player>()?.IncreaseGold(dropGold);
 
             StopAllCoroutines();
             MoveTo(Vector3.zero);
             attackTarget = null;
 
             // 아이템 드롭
-            ItemPool.Instance.DropItem(droppedItems[Random.Range(0, droppedItems.Length)], transform.position);
+            float pos = Random.Range(0f, 1f);
+            for ( int i=0; i<droppedItems.Count; ++i )
+            {
+                if ( Random.Range(0f, 1f) <= dropPos[i] )
+                {
+                    ItemPool.Instance.DropItem(droppedItems[i], transform.position);
+                }
+            }
         }
     }
 
@@ -62,7 +88,7 @@ public class Monster : Character
         {
             if ( monsterState == MonsterState.SearchTarget )
             {
-                Vector3 randPos = Random.insideUnitSphere;
+                Vector3 randPos = transform.position + Random.insideUnitSphere;
                 randPos.y = transform.position.y;
                 Vector3 direction = (randPos - transform.position).normalized;
                 MoveTo(direction);

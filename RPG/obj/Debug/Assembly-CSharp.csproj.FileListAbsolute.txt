@@ -1,2 +1,0 @@
-D:\School\3-1 Vacation\Unity3D\Unity3D_RPG\RPG\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
-D:\School\3-1 Vacation\Unity3D\Unity3D_RPG\RPG\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
